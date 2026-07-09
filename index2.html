@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Testing Sandbox</title>
+
+    <style>
+      /* 🎨 官方原生安全的全局变量配置，绝对不会让 Agent 消失 */
+      df-messenger {
+        /* ⏱️ 加上平滑过渡动画，让放大缩小的时候更流畅 */
+        transition: all 0.3s ease-in-out;
+
+        /* 📱 默认初始大小（小客服模式） */
+        --df-messenger-chat-window-width: 370px;
+        --df-messenger-chat-window-height: 500px;
+      }
+
+      /* 🖥️ 给你的控制按钮做个简单好看的样式 */
+      .toggle-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 10px 16px;
+        background-color: #ea580c;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: sans-serif;
+        font-size: 14px;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 9999; /* 确保按钮在最上层 */
+      }
+      .toggle-btn:hover {
+        background-color: #d97706;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="toggle-btn" onclick="resizeAgent()" id="sizeBtn">
+      🖥️ 切换大屏 LLM 模式
+    </button>
+
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+      intent="WELCOME"
+      chat-title="History_Expert_Bot"
+      agent-id="4972f0bd-b771-4359-9f04-bebcdc684ee1"
+      language-code="en"
+    ></df-messenger>
+    <script>
+      let isLarge = false;
+
+      function resizeAgent() {
+        const agent = document.querySelector("df-messenger");
+        const btn = document.getElementById("sizeBtn");
+
+        if (!isLarge) {
+          // 🚀 优雅放大：改成大屏类 ChatGPT 宽度与高度
+          agent.style.setProperty("--df-messenger-chat-window-width", "75vw");
+          agent.style.setProperty("--df-messenger-chat-window-height", "75vh");
+
+          btn.innerText = "📱 切换小框模式";
+          isLarge = true;
+        } else {
+          // 📱 还原成标准官方小框
+          agent.style.setProperty("--df-messenger-chat-window-width", "370px");
+          agent.style.setProperty("--df-messenger-chat-window-height", "500px");
+
+          btn.innerText = "🖥️ 切换大屏 LLM 模式";
+          isLarge = false;
+        }
+      }
+    </script>
+  </body>
+</html>

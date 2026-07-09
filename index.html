@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mat Kilau — Sejarawan Digital</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-deep: #0b140f;
+        --bg-panel: #16241b;
+        --bg-panel-light: #1e3024;
+        --gold: #c8973f;
+        --gold-soft: #8e6a2c;
+        --maroon: #7a2a2a;
+        --parchment: #ede3cc;
+        --sage: #8aa085;
+        --font-display: "Spectral", serif;
+        --font-body: "Work Sans", sans-serif;
+        --font-mono: "IBM Plex Mono", monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(ellipse at 50% -10%, #22371f 0%, transparent 55%),
+          linear-gradient(180deg, var(--bg-deep) 0%, #0a120d 100%);
+        color: var(--parchment);
+        font-family: var(--font-body);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* ambient canopy silhouette, top and bottom */
+      .canopy {
+        position: fixed;
+        left: 0;
+        right: 0;
+        height: 180px;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.55;
+      }
+      .canopy.top {
+        top: 0;
+      }
+      .canopy.bottom {
+        bottom: 0;
+        transform: scaleY(-1);
+      }
+
+      .canopy svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .leaf-drift {
+          animation: drift 14s ease-in-out infinite;
+        }
+        .leaf-drift.b {
+          animation-duration: 18s;
+          animation-delay: -4s;
+        }
+        .leaf-drift.c {
+          animation-duration: 11s;
+          animation-delay: -8s;
+        }
+      }
+      @keyframes drift {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(6px);
+        }
+      }
+
+      main,
+      header,
+      footer {
+        position: relative;
+        z-index: 1;
+      }
+
+      header.hero {
+        text-align: center;
+        padding: 6.5rem 1.5rem 3rem;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+
+      .eyebrow {
+        font-family: var(--font-mono);
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        color: var(--gold);
+        margin: 0 0 1.1rem;
+      }
+
+      h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(2.6rem, 7vw, 4.6rem);
+        letter-spacing: 0.04em;
+        margin: 0;
+        color: var(--parchment);
+        text-shadow: 0 2px 24px rgba(200, 151, 63, 0.18);
+      }
+
+      .subtitle {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: var(--sage);
+        max-width: 520px;
+        margin: 1.4rem auto 0;
+      }
+
+      /* --- carved-frame chat panel --- */
+      .widget-section {
+        max-width: 460px;
+        margin: 1rem auto 4rem;
+        padding: 0 1.5rem;
+      }
+
+      .frame {
+        position: relative;
+        background: linear-gradient(
+          180deg,
+          var(--bg-panel-light),
+          var(--bg-panel)
+        );
+        border: 1px solid rgba(200, 151, 63, 0.35);
+        border-radius: 6px;
+        padding: 22px;
+        box-shadow:
+          0 30px 60px -20px rgba(0, 0, 0, 0.6),
+          inset 0 0 0 1px rgba(200, 151, 63, 0.06);
+      }
+
+      .frame::before {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border: 1px solid rgba(200, 151, 63, 0.25);
+        border-radius: 3px;
+        pointer-events: none;
+      }
+
+      .corner {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        color: var(--gold);
+      }
+      .corner svg {
+        width: 100%;
+        height: 100%;
+      }
+      .corner.tl {
+        top: 6px;
+        left: 6px;
+      }
+      .corner.tr {
+        top: 6px;
+        right: 6px;
+        transform: scaleX(-1);
+      }
+      .corner.bl {
+        bottom: 6px;
+        left: 6px;
+        transform: scaleY(-1);
+      }
+      .corner.br {
+        bottom: 6px;
+        right: 6px;
+        transform: scale(-1, -1);
+      }
+
+      .frame iframe {
+        display: block;
+        width: 100%;
+        border: none;
+        border-radius: 2px;
+        background: #fff;
+      }
+
+      .widget-caption {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--sage);
+        margin: 1.1rem 0 0;
+        font-style: italic;
+      }
+
+      /* --- timeline --- */
+      .timeline-section {
+        max-width: 680px;
+        margin: 0 auto 5rem;
+        padding: 0 1.5rem;
+      }
+
+      .timeline-section h2 {
+        font-family: var(--font-display);
+        font-size: 1.6rem;
+        color: var(--gold);
+        text-align: center;
+        margin: 0 0 2.4rem;
+        font-weight: 600;
+      }
+
+      .timeline {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border-left: 1px solid rgba(200, 151, 63, 0.3);
+      }
+
+      .timeline li {
+        position: relative;
+        padding: 0 0 2.2rem 2rem;
+      }
+
+      .timeline li::before {
+        content: "";
+        position: absolute;
+        left: -5.5px;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--gold);
+        box-shadow: 0 0 0 4px var(--bg-deep);
+      }
+
+      .timeline .year {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        color: var(--maroon);
+        background: rgba(122, 42, 42, 0.15);
+        padding: 0.15rem 0.5rem;
+        border-radius: 3px;
+        width: fit-content;
+        margin-bottom: 0.5rem;
+      }
+
+      .timeline p {
+        margin: 0;
+        line-height: 1.65;
+        color: var(--parchment);
+        font-size: 0.95rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2.5rem 1.5rem 3rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        color: var(--sage);
+        opacity: 0.7;
+      }
+
+      footer a {
+        color: var(--gold);
+        text-decoration: none;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      .note {
+        max-width: 460px;
+        margin: 0 auto 2.5rem;
+        padding: 0 1.5rem;
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--sage);
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+      intent="WELCOME"
+      chat-title="History_Expert_Bot"
+      agent-id="4972f0bd-b771-4359-9f04-bebcdc684ee1"
+      language-code="en"
+    ></df-messenger>
+
+    <main>
+      <section class="widget-section">
+        <div class="frame">
+          <div class="corner tl">
+            <svg viewBox="0 0 26 26">
+              <path
+                d="M2 24 L2 8 Q2 2 8 2 L24 2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+            </svg>
+          </div>
+          <div class="corner tr">
+            <svg viewBox="0 0 26 26">
+              <path
+                d="M2 24 L2 8 Q2 2 8 2 L24 2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+            </svg>
+          </div>
+          <div class="corner bl">
+            <svg viewBox="0 0 26 26">
+              <path
+                d="M2 24 L2 8 Q2 2 8 2 L24 2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+            </svg>
+          </div>
+          <div class="corner br">
+            <svg viewBox="0 0 26 26">
+              <path
+                d="M2 24 L2 8 Q2 2 8 2 L24 2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+            </svg>
+          </div>
+
+          <iframe
+            height="430"
+            width="100%"
+            src="https://bot.dialogflow.com/4972f0bd-b771-4359-9f04-bebcdc684ee1"
+          ></iframe>
+        </div>
+        <p class="widget-caption">
+          "Siapa Mat Kilau?" · "Apa punca Kebangkitan Pahang?" · "Cerita tentang
+          silat Melayu"
+        </p>
+      </section>
+
+      <p class="note">
+        Mengenai suara: mikrofon hanya akan muncul jika diaktifkan dalam tetapan
+        Dialogflow Messenger anda sendiri — widget demo lama ini
+        (bot.dialogflow.com) tidak mendedahkan pilihan itu dari luar iframe,
+        jadi butang suara tidak boleh ditambah dari halaman ini tanpa menukar
+        kepada widget rasmi df-messenger.
+      </p>
+
+      <section class="timeline-section">
+        <h2>Garis Masa Kebangkitan</h2>
+        <ol class="timeline">
+          <li>
+            <span class="year">1891</span>
+            <p>
+              Dasar cukai British ke atas hasil hutan menjejaskan pendapatan
+              ketua-ketua tempatan dan rakyat Pahang, mencetuskan rasa tidak
+              puas hati yang meluas.
+            </p>
+          </li>
+          <li>
+            <span class="year">1891</span>
+            <p>
+              Sistem "Residen" British melucutkan kuasa perundangan dan
+              pentadbiran tradisional para ketua Melayu di Pahang.
+            </p>
+          </li>
+          <li>
+            <span class="year">1891–92</span>
+            <p>
+              Polis British menangkap tiga penduduk kampung atas tuduhan
+              mengambil kayu — insiden yang menjadi pencetus akhir kemarahan
+              rakyat.
+            </p>
+          </li>
+          <li>
+            <span class="year">1892–95</span>
+            <p>
+              Mat Kilau bersama bapanya, Tok Gajah, mengetuai perjuangan
+              bersenjata menentang British selama hampir empat tahun.
+            </p>
+          </li>
+          <li>
+            <span class="year">1895</span>
+            <p>
+              Kebangkitan Pahang berakhir, namun kisah keberanian Mat Kilau
+              kekal sebagai warisan perjuangan rakyat Pahang hingga kini.
+            </p>
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer>
+      PROJEK APU · FULFILLMENT DIKUASAKAN OLEH DIALOGFLOW &amp; GEMINI
+    </footer>
+
+    <div class="canopy bottom" aria-hidden="true">
+      <svg viewBox="0 0 1200 180" preserveAspectRatio="none">
+        <path
+          class="leaf-drift c"
+          d="M0,40 C150,90 300,0 450,50 C600,100 750,10 900,60 C1000,90 1100,40 1200,70 L1200,0 L0,0 Z"
+          fill="#1C2E22"
+        />
+      </svg>
+    </div>
+  </body>
+</html>
